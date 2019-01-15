@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!-- 1.命名空间 (非常重要)-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+	<h1>
+		欢迎<span th:text="${session.USERS==null?'查无此人':session.USERS.userName}"
+			style="color: red">XXX</span>用户登陆成功
+	</h1>
+	<!-- <div th:each="temp:${#numbers.sequence(1,10,1)}" th:text="${temp}">
+	</div> -->
+
+	<table border="1" width="500">
+		<thead>
+			<tr style="background-color: #EFEFEF">
+				<th>序号</th>
+				<th>消息主题</th>
+				<th>发布者</th>
+				<th>发布时间</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<!-- th:remove="all-but-first" 【非常重要】 -->
+		<tbody th:remove="${PAGE_INFO.list.size()==0?'none':'all-but-first'}">
+			<tr th:style="${i.even?'background:gray;':'background:white;'}" th:each="temp,i:${PAGE_INFO.list}">
+				<td>[[${i.count}]]</td>
+				<td th:text="${temp.mtitle}">静态系统消息1</td>
+				<td th:text="${temp.muser}">test</td>
+				<td th:text="${#dates.format(temp.mdate,'yyyy年MM月dd日')}">2000-12-13</td>
+				<td>
+					<div th:switch="${temp.mstate}">
+						<span th:case="0" style="color:red">未读</span>
+						<span th:case="1" style="color:green">已读</span>
+						<span th:case="*" style="color:red">未读</span>
+					</div>
+				</td>
+				<!-- 1.th:href="|/c/message/del1?mid=${temp.mid}&name=admin|" 
+					 2.@{/c/message/del1(mid=${temp.mid},name=admin)}
+				-->
+				<td><a  href="javascript:void(0)" th:onclick="|fnDelMessage(${temp.mid})|">移除</a></td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>静态系统消息1</td>
+				<td>test</td>
+				<td>2000-12-13</td>
+				<td>未读</td>
+				<td><a href="javascript:void(0)">移除</a></td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>静态系统消息2</td>
+				<td>admin</td>
+				<td>2010-10-13</td>
+				<td>已读</td>
+				<td><a href="javascript:void(0)">移除</a></td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>静态系统消息3</td>
+				<td>sa</td>
+				<td>1990-12-13</td>
+				<td>未读</td>
+				<td><a href="javascript:void(0)">移除</a></td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>静态系统消息4</td>
+				<td>system</td>
+				<td>1991-11-11</td>
+				<td>未读</td>
+				<td><a href="javascript:void(0)">移除</a></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+<script type="text/javascript" src="/js/jquery-1.12.4.js"></script>
+
+<script type="text/javascript" th:inline="javascript">
+	var pageSize=[[${PAGE_INFO.pageSize}]];//非常重要
+	alert(pageSize);
+	function fnDelMessage(mid) {
+		if (window.confirm('是否移除')) {
+			location.href = '/c/message/del1?mid=' + mid;
+		}
+	}
+</script>
+
+</html>
